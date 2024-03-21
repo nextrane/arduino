@@ -14,6 +14,8 @@ const int speakerPin = 6;
 const int maxDistance = 200;
 const int maxDistances[] = {maxDistance/4, maxDistance/2, 3*maxDistance/4};
 
+const int MODE = 0;
+
 Servo servo;
 int servo_angle = 0;
 
@@ -106,26 +108,20 @@ public:
     const int min_distance_cm = 5;
     int speakerPin;
     bool mode;  // 0: piano, 1: game
-    // const int notesLength = 36;
-    // int notes[36] = { 261, 277, 293, 311, 329, 349, 369, 392, 415, 440, 466, 493,
-    //                   523, 554, 587, 622, 659, 698, 739, 783, 830, 880, 932, 987,
-    //                   1046, 1108, 1174, 1244, 1318, 1396, 1479, 1567, 1661, 1760, 1864, 1975 };
+    const int notesLength = 12;
+    int notes[36] = { 261, 277, 293, 311, 329, 349, 369, 392, 415, 440, 466, 493,
+                      523, 554, 587, 622, 659, 698, 739, 783, 830, 880, 932, 987,
+                      1046, 1108, 1174, 1244, 1318, 1396, 1479, 1567, 1661, 1760, 1864, 1975 };
+
     // only C D ... without the black keys
-    // const int notesLength = 35;
+
+    // const int notesLength = 24;
     // int notes[35] = {
-    //     65, 73, 82, 87, 98, 110, 123,
     //     131, 147, 165, 175, 196, 220, 247,
     //     261, 293, 329, 349, 392, 440, 493,
     //     523, 587, 659, 698, 783, 880, 987,
     //     1046, 1174, 1318, 1396, 1567, 1760, 1975,
     // };
-    const int notesLength = 24;
-    int notes[35] = {
-        131, 147, 165, 175, 196, 220, 247,
-        261, 293, 329, 349, 392, 440, 493,
-        523, 587, 659, 698, 783, 880, 987,
-        1046, 1174, 1318, 1396, 1567, 1760, 1975,
-    };
 
     DigitalPiano(int speakerPin, bool mode) {
         this->speakerPin = speakerPin;
@@ -157,8 +153,8 @@ public:
         int note = -1;
         if (distance <= max_distance_cm && distance >= min_distance_cm) {
             note = map(distance, min_distance_cm, max_distance_cm, notesLength, 0);
-            tone(speakerPin, notes[note], 500);
-            delay(200);
+            tone(speakerPin, notes[note], 100);
+            delay(30);
         } else {
             // shut up
             noTone(speakerPin);
@@ -233,13 +229,14 @@ void setup() {
     pinMode(speakerPin, OUTPUT);
 }
 
-void piano_loop() {
+void loop1() {
     piano.loop();
 }
 
 void loop() {
-    if (true) {
+    if (MODE == 0) {
         piano.loop();
+        delay(50);
         return;
     }
 
